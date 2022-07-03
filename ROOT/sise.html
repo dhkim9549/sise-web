@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>주택 시세 조회</title>
+<style>
+html {
+  font-size: 16px;
+}
+body {
+  background-color: #fbfbfd;
+  font-family: '나눔고딕',NanumGothic,'돋움',Dotum,Helvetica,sans-serif;
+}
+.btn_login_wrap {margin:0;}
+.btn_login {
+  display:block;width:150px;padding:13px 0 13px;
+  border:solid 1px rgba(0,0,0,.15);background-color:#036635;box-sizing:border-box;padding:13px 0;border-radius:5.4px
+}
+.btn_text {
+  font-size:20px;font-weight:700;line-height:24px;color:#fbfbfd;letter-spacing:-.5px
+}
+
+.jfk_textinput{border-radius:1px;border:1px solid #d9d9d9;border-top:1px solid #c0c0c0;font-size:13px;height:25px;padding:1px 8px}
+.jfk_textinput:focus{box-shadow:inset 0 1px 2px rgba(0,0,0,.3);border:1px solid #4d90fe;outline:none}
+.label_req{font-size:13px;line-height:25px;}
+
+
+.flex-header {
+  display: flex;
+  justify-content: left;
+  flex-flow: column;
+  background-color: #fbfbfd;
+  margin: 0px;
+  padding-top: 3em;
+  padding-bottom: 2em;
+  padding-left: 68px;
+}
+.flex-header > div {
+  margin-bottom: 0.7em;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.flex_input {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: start;
+  background-color: white;
+  margin: 0 0.5em 0.5em;
+  padding: 2em 0;
+
+  border-radius: 8px;
+  box-shadow: 2px 2px 20px 0 rgba(0,0,0,0.04);
+}
+
+.flex_input > div {
+  margin: 0 3em 1em;
+}
+
+.flex_input_2 {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0.5em;
+  padding: 2em;
+}
+@media only screen and (min-width: 992px) {
+  .flex_input_2 {
+    padding-left: 3em;
+  }
+}
+
+.preference {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  margin-bottom: 0.7em;
+}
+@media only screen and (min-width: 992px) {
+  .preference {
+    width: 20em;
+  }
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  background-color: #fbfbfd;
+  margin: 0px;
+  padding: 5px;
+}
+.flex-container > div {
+  display: flex;
+  flex-direction: column;
+  margin: 0.1em;
+  padding: 0.2em 0.7em;
+  text-align: left;
+  font-size: 1em;
+
+  background: #fff;
+  box-shadow: 2px 2px 20px 0 rgba(0,0,0,0.04);
+  overflow: auto;
+}
+@media only screen and (min-width: 992px) {
+  .flex-container > div {
+  }
+}
+.flex-container > div:hover {
+  box-shadow: 0 0 11px rgba(33,33,33,.2); 
+}
+.flex-container > div > p {
+  font-size: 1.4em;
+}
+.flex-container > div > div {
+  font-size: 0.9em;
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+.cont {
+  max-width: 100%;
+  line-height: 1.4em
+}
+
+
+.select {
+    padding: 0;
+}
+.select input[type=radio]{
+    display: none;
+}
+.select input[type=radio]+label{
+    display: inline-block;
+    cursor: pointer;
+    height: 24px;
+    width: 60px;
+    border: 1px solid #333;
+    line-height: 24px;
+    text-align: center;
+    font-weight:bold;
+    font-size:13px;
+}
+.select input[type=radio]+label{
+    background-color: #fff;
+    color: #333;
+}
+.select input[type=radio]:checked+label{
+    background-color: #333;
+    color: #fff;
+}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/df-number-format/2.1.6/jquery.number.min.js"></script>
+<script>
+
+let dd;
+let zloanYm;
+let vv;
+
+document.addEventListener("DOMContentLoaded", function(event) {
+  $("[id^=board2]").hide();
+  $("#button1").hide();
+  fetchCitySet();
+  fetchSgguMap();
+  fetchEmdMap();
+  checkSrchDvcd();
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  const ltnoBno = document.getElementById("ltnoBno");
+  ltnoBno.addEventListener("input", function(event) {
+    ltnoBno.value = ltnoBno.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+  });
+  
+  document.getElementById("button1").addEventListener("click", function() {
+    if(siseDvcdVal == '1') {
+      getAddrList();
+    } else if(siseDvcdVal == '2') {
+      getEhPr();
+    }
+  });
+  document.getElementById("board2").addEventListener('keydown', (e) => {
+    if(e.key == "Enter") {
+      document.getElementById("button1").click(); 
+    }
+  });
+  document.getElementById("board2A").addEventListener('keydown', (e) => {
+    if(e.key == "Enter") {
+      document.getElementById("button1").click(); 
+    }
+  });
+  $('[id^=siseDvcd]').click(function() {
+    checkSiseDvcd();
+    getCitySet();
+  });
+  $('[id^=srchDvcd]').click(function() {
+    checkSrchDvcd();
+  });
+});
+
+let citySet;
+function fetchCitySet() {
+  fetch("citySet.json")
+    .then(res => res.json())
+    .then(data => {
+      citySet = data;
+    });
+}
+
+let sgguMap;
+function fetchSgguMap() {
+  fetch("sgguMap.json")
+    .then(res => res.json())
+    .then(data => {
+      sgguMap = data;
+    });
+}
+
+let emdMap;
+function fetchEmdMap() {
+  fetch("emdMap.json")
+    .then(res => res.json())
+    .then(data => {
+      emdMap = data;
+    });
+}
+
+function getCitySet() {
+
+  $('[id^=board1]').empty();
+  $("[id^=board2]").hide();
+  $("#button1").hide();
+  
+  citySet.forEach((x, i) => {
+  
+    let e = document.createElement('div');
+    let board1 = document.getElementById("board1");
+    board1.append(e);
+
+    e.addEventListener("click", function() {
+      $(this).siblings().css("background-color", "white");
+      e.style.backgroundColor = "#ffe812";
+      getSgguSet(x);
+    });
+        
+    let e1 = document.createElement('div');
+    e1.innerHTML = x;
+    e.append(e1);
+  });
+}
+
+let siseDvcdVal;
+
+function checkSiseDvcd() {
+  siseDvcdVal = getRadioButtonValue('siseDvcd');
+}
+
+function checkSrchDvcd() {
+  $('[id^=srchPnl]').hide();
+  $('#sgguBldgNm').val("");
+  $('#ltnoBno').val("");
+  let srchDvcdVal = getRadioButtonValue('srchDvcd');
+  if(srchDvcdVal == '1') {
+    $('#srchPnlBldgNm').show();
+  } else if(srchDvcdVal == '2') {
+    $('#srchPnlLtnoBno').show();
+  }
+}
+
+let sgguSet;
+let citySel;
+function getSgguSet(city) {
+
+  $('[id^=board12]').empty();
+  $("[id^=board2]").hide();
+  $("#button1").hide();
+  $("#board12").show();
+  
+  citySel = city;
+  sgguSet = sgguMap[city];
+
+  sgguSet.forEach((x, i) => {
+  
+    let e = document.createElement('div');
+    let board12 = document.getElementById("board12");
+    board12.append(e);
+
+    e.addEventListener("click", function() {
+      $(this).siblings().css("background-color", "white");
+      e.style.backgroundColor = "#ffe812";
+      getEmdSet(x);
+    });
+        
+    let e1 = document.createElement('div');
+    e1.innerHTML = x;
+    e.append(e1);
+
+    if(citySel == '세종특별자치시') {
+      e1.click();
+      $("#board12").hide();
+    }
+  });
+}
+
+let emdSet;
+let sgguSel;
+function getEmdSet(sggu) {
+
+  $('[id^=board123]').empty();
+  $("[id^=board2]").hide();
+  $("#button1").hide();
+
+  sgguSel = sggu;
+  emdSet = emdMap[citySel + '|' + sggu];
+  
+  emdSet.forEach((x, i) => {
+  
+    let e = document.createElement('div');
+    let board123 = document.getElementById("board123");
+    board123.append(e);
+
+    e.addEventListener("click", function() {
+      $(this).siblings().css("background-color", "white");
+      e.style.backgroundColor = "#ffe812";
+      lwdgCd = x.split('|')[1];
+      if(siseDvcdVal == '1') {
+        showBldgNm();
+      } else if(siseDvcdVal == '2') {
+        showLtno();
+      }
+    });
+        
+    let e1 = document.createElement('div');
+    e1.innerHTML = x.split('|')[0];
+    e.append(e1);
+  });
+}
+
+let lwdgCd;
+
+function showBldgNm() {
+  $('[id^=board1234]').empty();
+	$("#board2").show();
+  $("#button1").show();
+  
+	$("#sgguBldgNm").focus();
+}
+
+function showLtno() {
+  $('[id^=board1234]').empty();
+	$("#board2A").show();
+  $('[id^=srchPnlEh]').show();
+  $("#button1").show();
+  
+	$("#ehLtnoBno").focus();
+}
+
+function getEhPr() {
+
+  let board1234 = document.getElementById("board1234");
+  $('[id^=board1234]').html("");
+
+  let ehLtnoBno = document.getElementById('ehLtnoBno');
+  let ehLtnoBuno = document.getElementById('ehLtnoBuno');
+  let ehLtnoBnoStr = ehLtnoBno.value.trim();
+  let ehLtnoBunoStr = ehLtnoBuno.value.trim();
+
+  if(ehLtnoBnoStr == "") {
+    alert("지번 본번을 입력하세요.");
+    return;
+  }
+	
+  fetch("http://bada.ai:8081/sise/ehpr"
+		+ "?lwdgCd=" + lwdgCd
+		+ "&ltnoBno=" + ehLtnoBnoStr
+		+ "&ltnoBuno=" + ehLtnoBunoStr
+	)
+    .then(r => r.json())
+    .then(d => {
+
+        let items = d;
+				
+        items.forEach(element => {
+        
+            let e = document.createElement('div');
+            e.className = "warning";
+            board1234.append(e);
+						
+            let e0 = document.createElement('div');
+            e0.className = "cont";
+            e0.innerHTML = element.cityNm + " " + element.sgguNm + " " + element.eubMyunNm + " " + element.stnmAddr;
+            e.append(e0);
+						
+            let e1 = document.createElement('div');
+            e1.className = "cont";
+            e1.innerHTML = "(면적) " + element.bldgArea;
+            e.append(e1);
+						
+            let e2 = document.createElement('div');
+            e2.className = "cont";
+            e2.innerHTML = "(공시가격) " + $.number(element.ofntPrc) + " 원";
+            e.append(e2);
+
+            e.addEventListener("click", function() {
+              $(this).siblings().css("background-color", "white");
+              e.style.backgroundColor = "#ffe812";
+            });
+        });
+        
+        if(items.length == 0) {
+          board1234H.innerHTML = "조회된 개별주택이 없습니다.";
+        } else {
+          board1234H.innerHTML = "개별주택 공시가격";
+        }
+
+	      board1234.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+    });
+}
+
+function getAddrList() {
+
+  let board1234 = document.getElementById("board1234");
+  $('[id^=board1234]').html("");
+
+  let srchDvcd = getRadioButtonValue('srchDvcd');
+  let sgguBldgNm = document.getElementById("sgguBldgNm");
+  let sgguBldgNmStr = sgguBldgNm.value.trim();
+  let ltnoBno = document.getElementById("ltnoBno");
+  let ltnoBnoStr = ltnoBno.value.trim();
+  let srchVal = "";
+
+  if(srchDvcd == '1') {
+    if(sgguBldgNmStr == "") {
+      alert("건물명을 입력하세요.");
+      return;
+    }
+    srchVal = sgguBldgNmStr;
+  } else if(srchDvcd == '2') {
+    if(ltnoBnoStr == "") {
+      alert("지번을 입력하세요.");
+      return;
+    }
+    srchVal = ltnoBnoStr;
+  }
+	
+  fetch("http://bada.ai:8081/sise/addr"
+		+ "?lwdgCd=" + lwdgCd
+		+ "&srchDvcd=" + srchDvcd
+		+ "&srchVal=" + encodeURIComponent(srchVal)
+	)
+    .then(r => r.json())
+    .then(d => {
+
+        let items = d;
+				
+        items.forEach(element => {
+        
+            let e = document.createElement('div');
+            e.className = "warning";
+            board1234.append(e);
+						
+            let e0 = document.createElement('div');
+            e0.className = "cont";
+            e0.innerHTML = "(건물명) " + element.sgguBldgNm;
+            e.append(e0);
+						
+            let e1 = document.createElement('div');
+            e1.className = "cont";
+            e1.innerHTML = "(도로명) " + element.stnmAddr;
+            e.append(e1);
+
+            let e2 = document.createElement('div');
+            e2.className = "cont";
+            e2.innerHTML = "(지번) " + element.ltnoAddr;
+            e.append(e2);
+						e.setAttribute("stnmUnonCd", element.stnmUnonCd);
+
+            e.addEventListener("click", function() {
+                $(this).siblings().css("background-color", "white");
+                e.style.backgroundColor = "#ffe812";
+                getSiseMap(e.getAttribute("stnmUnonCd"));
+            });
+        });
+        
+        if(items.length == 0) {
+          board1234H.innerHTML = "조회된 건물이 없습니다.";
+        } else {
+          board1234H.innerHTML = "건물을 선택하세요.";
+        }
+
+	      board1234.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+    });
+}
+
+let mapArr = [];
+let mapArrProcessedCnt;
+
+async function getSiseMap(stnmUnonCd) {
+
+  mapArr = [];
+  mapArrProcessedCnt = -1;
+	
+  $('[id^=board12345]').html("");
+  
+  fetch("http://bada.ai:8081/sise/map"
+		+ "?stnmUnonCd=" + stnmUnonCd
+	)
+    .then(r => r.json())
+    .then(d => {
+
+        let items = d;
+        
+        mapArr = d;
+        
+        getAptSise();
+    });
+  
+  let i = 0;
+  while(true) {  
+    await new Promise(resolve => setTimeout(resolve, 20));
+    console.log("mapArrProcessedCnt = " + mapArrProcessedCnt);
+    console.log("mapArr.length = " + mapArr.length);
+    console.log("i = " + i);
+    if(mapArrProcessedCnt >= mapArr.length) {
+      break;
+    }
+    i++;
+    if(20 * i > 3000) {
+      alert("시세 조회 중 에러가 발생하였습니다.");
+    }
+  }
+  
+  showKbSise();
+  showKabSise();
+  
+  if(kbArr.length == 0 && kabArr.length == 0 && mapArr.length > 0) {
+    $('#board1234567H').html("공동주택 공시가격을 조회합니다.");
+    getOlprSise();
+  }
+}
+
+let kbArr = [];
+let kabArr = [];
+
+function getAptSise() {
+
+  kbArr = [];
+  kabArr = [];
+  mapArrProcessedCnt++;
+  
+  for(let i = 0; i < mapArr.length; i++) {
+    
+    let element = mapArr[i];
+  
+    if(element.siseDvcd == 'KBP') {
+
+        fetch("http://bada.ai:8081/sise/kbSise"
+          + "?kbHsDstgNo=" + element.siseMapDstgKeyVal
+        )
+          .then(r => r.json())
+          .then(d => {
+
+            d.forEach(element => {
+              kbArr.push(element);
+            });
+            mapArrProcessedCnt++;
+            
+          });
+          
+    } else if(element.siseDvcd == 'KAB') {
+
+        fetch("http://bada.ai:8081/sise/kabSise"
+          + "?kabDnjiNo=" + element.siseMapDstgKeyVal
+        )
+          .then(r => r.json())
+          .then(d => {
+
+            d.forEach(element => {
+              kabArr.push(element);
+            });
+            mapArrProcessedCnt++;
+            
+          });
+    } else {
+      mapArrProcessedCnt++;
+    }
+  }
+}
+
+function showKbSise() {
+  if(kbArr.length > 0) {
+    $('#board12345H').html("KB 시세");
+  } else {
+    $('#board12345H').html("KB 시세가 없습니다.");
+  }
+  let board12345 = document.getElementById("board12345");
+  
+  kbArr.sort(function (a, b) {
+    return (a.pyngArea.padStart(10, '0') + a.ptyTypeNm).localeCompare(b.pyngArea.padStart(10, '0') + b.ptyTypeNm);
+  });
+
+  for(let i = 0; i < kbArr.length; i++) {
+    
+    let element = kbArr[i];
+
+    let e = document.createElement('div');
+    e.className = "warning";
+    board12345.append(e);
+		
+    let e0 = document.createElement('div');
+    e0.className = "cont";
+    e0.innerHTML = "(평형) " + element.pyngArea + element.ptyTypeNm;
+    e.append(e0);
+
+    let e01 = document.createElement('div');
+    e01.className = "cont";
+    e01.innerHTML = "(전용면적) " + element.excvArea + " m²";
+    e.append(e01);
+
+    let e02 = document.createElement('div');
+    e02.className = "cont";
+    e02.innerHTML = "(공급면적) " + element.splyArea + " m²";
+    e.append(e02);
+
+    let e1 = document.createElement('div');
+    e1.className = "cont";
+    e1.innerHTML = "(평균매매가격) " + formatPrc(element.trdAvgPrc);
+    e.append(e1);
+
+    e.addEventListener("click", function() {
+      $(this).siblings().css("background-color", "white");
+      e.style.backgroundColor = "#ffe812";
+    });
+  }
+  
+  board12345H.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+}
+
+function formatPrc(prcAmt) {
+  let prc = "" + prcAmt;
+  let prcA = prc.substring(0, prc.length - 4);
+  if(prcA != "") {
+    prcA = prcA + "억"
+  }
+  let prcB = prc.substring(prc.length - 4);
+  prcB = Number(prcB);
+  let rslt = prcA;
+  if(prcB > 0) {
+    rslt += " " + prcB + "만";
+  }
+  rslt += " 원";
+  return rslt.trim();
+}
+
+function showKabSise() {
+  if(kabArr.length > 0) {
+    $('#board123456H').html("KAB 시세");
+  } else {
+    $('#board123456H').html("KAB 시세가 없습니다.");
+  }
+
+  let board123456 = document.getElementById("board123456");
+
+  kabArr.sort(function (a, b) {
+    return (a.pyngArea.padStart(10, '0') + a.ptyTypeNm).localeCompare(b.pyngArea.padStart(10, '0') + b.ptyTypeNm);
+  });
+
+  for(let i = 0; i < kabArr.length; i++) {
+    
+    let element = kabArr[i];
+
+    let e = document.createElement('div');
+    e.className = "warning";
+    board123456.append(e);
+		
+    let e0 = document.createElement('div');
+    e0.className = "cont";
+    e0.innerHTML = "(평형) " + element.pyngArea + element.ptyTypeNm;
+    e.append(e0);
+
+    let e01 = document.createElement('div');
+    e01.className = "cont";
+    e01.innerHTML = "(전용면적) " + element.excvArea + " m²";
+    e.append(e01);
+
+    let e1 = document.createElement('div');
+    e1.className = "cont";
+    e1.innerHTML = "(평균매매가격) " + formatPrc(element.trdAvgPrc);
+    e.append(e1);
+
+    e.addEventListener("click", function() {
+      $(this).siblings().css("background-color", "white");
+      e.style.backgroundColor = "#ffe812";
+    });
+  }
+}
+
+function getOlprSise() {
+
+  let olprArr = [];
+  
+  for(let i = 0; i < mapArr.length; i++) {
+    
+    let element = mapArr[i];
+  
+    if(element.siseDvcd == 'IDX') {
+
+        fetch("http://bada.ai:8081/sise/olpr"
+          + "?twprcDnjiNo=" + element.siseMapDstgKeyVal
+        )
+          .then(r => r.json())
+          .then(d => {
+
+            d.forEach(element => {
+              olprArr.push(element);
+            });
+            
+            showOlprSise(olprArr);
+          });
+    }
+  }
+}
+
+function showOlprSise(olprArr) {
+  if(olprArr.length > 0) {
+    $('#board1234567H').html("공동주택 공시가격");
+  } else {
+    $('#board1234567H').html("공동주택 공시가격이 없습니다. (테스트) 공동주택 공시가격은 부산 지역만 조회 가능합니다.");
+  }
+
+  let board1234567 = document.getElementById("board1234567");
+
+  olprArr.sort(function (a, b) {
+    return (a.dtlBldgNm.padStart(10, '0') + a.bldgHo.padStart(10, '0')).localeCompare(b.dtlBldgNm.padStart(10, '0') + b.bldgHo.padStart(10, '0'));
+  });
+
+  for(let i = 0; i < olprArr.length; i++) {
+    
+    let element = olprArr[i];
+
+    let e = document.createElement('div');
+    e.className = "warning";
+    board1234567.append(e);
+		
+    let e0 = document.createElement('div');
+    e0.className = "cont";
+    e0.innerHTML = "(동) " + element.dtlBldgNm;
+    e.append(e0);
+
+    let e1 = document.createElement('div');
+    e1.className = "cont";
+    e1.innerHTML = "(호) " + element.bldgHo;
+    e.append(e1);
+    
+    let e11 = document.createElement('div');
+    e11.className = "cont";
+    e11.innerHTML = "(적용면적) " + element.apyArea + " m²";;
+    e.append(e11);
+
+    let e2 = document.createElement('div');
+    e2.className = "cont";
+    e2.innerHTML = "(공시가격) " + $.number(element.ofntPrc) + " 원";
+    e.append(e2);
+
+    e.addEventListener("click", function() {
+      $(this).siblings().css("background-color", "white");
+      e.style.backgroundColor = "#ffe812";
+    });
+  }
+}
+
+function getRadioButtonValue(varName) {
+  const radioButtons = document.querySelectorAll('input[name=' + varName +']');
+  let selectedValue;
+  for (const radioButton of radioButtons) {
+    if (radioButton.checked) {
+      selectedValue = radioButton.value;
+      break;
+    }
+  }
+  return selectedValue;
+} 
+
+</script>
+
+</head>
+<body id="body1">
+
+<div id="board0" class="flex-header">
+    <div>주택 시세 조회</div>
+</div>
+
+<div class="flex_input" id="input_area2">
+  <div id="app">
+    주택 시세를 조회합니다.
+  </div>
+</div>
+
+<div class="flex_input" id="input_area">
+  <div class="preference">
+    <label for="name" class="label_req">공동주택여부 (siseDvcd)</label>
+    <div class="select">
+      <input type="radio" id="siseDvcd1" name="siseDvcd" value="1"><label for="siseDvcd1">예</label>
+      <input type="radio" id="siseDvcd2" name="siseDvcd" value="2"><label for="siseDvcd2">아니오</label>
+    </div>
+  </div>
+</div>
+
+<div id="board1" class="flex-container">
+</div>
+
+<div id="board12" class="flex-container">
+</div>
+
+<div id="board123" class="flex-container">
+</div>
+
+<div id="board2" class="flex_input">
+  <div class="preference">
+    <label for="name" class="label_req">조회방법 (srchDvcd)</label>
+    <div class="select">
+      <input type="radio" id="srchDvcd1" name="srchDvcd" value="1" checked><label for="srchDvcd1">건물명</label>
+      <input type="radio" id="srchDvcd2" name="srchDvcd" value="2"><label for="srchDvcd2">지번</label>
+    </div>
+  </div>
+  <div>
+    <div class="preference" id="srchPnlBldgNm">
+      <label for="name" class="label_req">건물명 (sgguBldgNm)</label>
+      <input type="text" id="sgguBldgNm" name="sgguBldgNm" maxlength="30" size="30" class="jfk_textinput">
+    </div>
+    <div class="preference" id="srchPnlLtnoBno">
+      <label for="name" class="label_req">지번주소 번지 (ltnoBno)</label>
+      <input type="text" id="ltnoBno" name="ltnoBno" maxlength="10" size="10" class="jfk_textinput" placeholder="지번주소 본번만 입력">
+    </div>
+  </div>
+</div>
+
+<div id="board2A" class="flex_input">
+  <div>
+    <div class="preference" id="srchPnlEhLtnoBno">
+      <label for="name" class="label_req">지번주소 본번 (ehLtnoBno)</label>
+      <input type="text" id="ehLtnoBno" name="ehLtnoBno" maxlength="10" size="10" class="jfk_textinput" placeholder="지번주소 본번">
+    </div>
+    <div class="preference" id="srchPnlEhLtnoBuno">
+      <label for="name" class="label_req">지번주소 부번 (ehLtnoBuno)</label>
+      <input type="text" id="ehLtnoBuno" name="ehLtnoBuno" maxlength="10" size="10" class="jfk_textinput" placeholder="지번주소 부번">
+    </div>
+  </div>
+</div>
+
+<div class="flex_input_2">
+  <div id="rcmdCmt">
+  </div>
+  <div class="btn_login_wrap">
+    <button class="btn_login" id="button1">
+      <span class="btn_text">조회</span>
+    </button>
+  </div>
+</div>
+
+<div id="board1234H" class="flex-header">
+</div>
+<div id="board1234" class="flex-container">
+</div>
+
+<div id="board12345H" class="flex-header">
+</div>
+<div id="board12345" class="flex-container">
+</div>
+
+<div id="board123456H" class="flex-header">
+</div>
+<div id="board123456" class="flex-container">
+</div>
+
+<div id="board1234567H" class="flex-header">
+</div>
+<div id="board1234567" class="flex-container">
+</div>
+
+<div id="div1" class="flex-header">
+이 웹페이지는 프로토타입입니다.
+</div>
+
+</body></html>
