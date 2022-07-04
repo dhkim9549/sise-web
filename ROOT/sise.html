@@ -381,7 +381,7 @@ function getEhPr() {
     .then(d => {
 
         let items = d;
-				
+        
         items.forEach(element => {
         
             let e = document.createElement('div');
@@ -454,6 +454,16 @@ function getAddrList() {
     .then(d => {
 
         let items = d;
+
+        if(srchDvcd == '1') {
+          items.sort(function (a, b) {
+            return (a.sgguBldgNm).localeCompare(b.sgguBldgNm);
+          });
+        } else if(srchDvcd == '2') {
+          items.sort(function (a, b) {
+            return (a.ltnoBuno.padStart(10, '0')).localeCompare(b.ltnoBuno.padStart(10, '0'));
+          });
+        }
 				
         items.forEach(element => {
         
@@ -881,7 +891,8 @@ function getRadioButtonValue(varName) {
 </div>
 
 <div id="div1" class="flex-header">
-이 웹페이지는 프로토타입입니다.
+이 웹페이지는 프로토타입입니다.<br><br>
+<a href="https://github.com/dhkim9549">github.com/dhkim9549</a>
 </div>
 
 </body></html>
