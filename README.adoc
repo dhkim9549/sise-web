@@ -17,8 +17,8 @@ Edit Apache configuration file:
 ----
 <VirtualHost *:80>
     ProxyPreserveHost On
-    ProxyPass /siseapp http://sise-rest-api-server:8081/
-    ProxyPassReverse /siseapp http://sise-rest-api-server:8081/
+    ProxyPass /siseapi http://sise-rest-api-server:8081/
+    ProxyPassReverse /siseapi http://sise-rest-api-server:8081/
 </VirtualHost>
 ----
 ====
