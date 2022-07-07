@@ -8,4 +8,6 @@ You will create a html page which will query sise data.
 
 * https://www.digitalocean.com/community/tutorials/how-to-use-apache-http-server-as-reverse-proxy-using-mod_proxy-extension-ubuntu-20-04[How To Use Apache as a Reverse-Proxy with mod_proxy on Ubuntu 20.04]
 
+* https://dirask.com/posts/Linux-apache2-FIX-AH01144-No-protocol-handler-was-valid-for-the-URL-scheme-http-p2GdKj[Linux apache2 FIX - AH01144: No protocol handler was valid for the URL / (scheme 'http').]
+
 * https://github.com/dhkim9549/sise-rest-api[Building sise REST API service]
