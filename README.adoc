@@ -1,0 +1,9 @@
+== What You Will Build
+
+You will create a html page which will query sise data.
+
+== What You Need
+
+* https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-ubuntu-20-04[How To Install the Apache Web Server on Ubuntu 20.04]
+
+* https://github.com/dhkim9549/sise-rest-api[Building sise REST API service]
