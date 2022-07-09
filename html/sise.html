@@ -153,6 +153,15 @@ body {
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/df-number-format/2.1.6/jquery.number.min.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2XXSKRJK7P"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2XXSKRJK7P');
+</script>
 <script>
 
 let dd;
@@ -160,6 +169,7 @@ let zloanYm;
 let vv;
 
 document.addEventListener("DOMContentLoaded", function(event) {
+  $("[id^=board1]").hide();
   $("[id^=board2]").hide();
   $("#button1").hide();
   fetchCitySet();
@@ -229,7 +239,10 @@ function fetchEmdMap() {
 
 function getCitySet() {
 
+  $("[id^=board1]").hide();
   $('[id^=board1]').empty();
+  $('#board1').show();
+  
   $("[id^=board2]").hide();
   $("#button1").hide();
   
@@ -273,10 +286,12 @@ let sgguSet;
 let citySel;
 function getSgguSet(city) {
 
+  $("[id^=board12]").hide();
   $('[id^=board12]').empty();
+  $('#board12').show();
+
   $("[id^=board2]").hide();
   $("#button1").hide();
-  $("#board12").show();
   
   citySel = city;
   sgguSet = sgguMap[city];
@@ -308,7 +323,10 @@ let emdSet;
 let sgguSel;
 function getEmdSet(sggu) {
 
+  $('[id^=board123]').hide();
   $('[id^=board123]').empty();
+  $('#board123').show();
+  
   $("[id^=board2]").hide();
   $("#button1").hide();
 
@@ -359,8 +377,12 @@ function showLtno() {
 
 function getEhPr() {
 
-  let board1234 = document.getElementById("board1234");
+  $('[id^=board1234]').hide();
   $('[id^=board1234]').html("");
+  $('#board1234').show();
+  $('#board1234H').show();
+
+  let board1234 = document.getElementById("board1234");
 
   let ehLtnoBno = document.getElementById('ehLtnoBno');
   let ehLtnoBuno = document.getElementById('ehLtnoBuno');
@@ -421,9 +443,12 @@ function getEhPr() {
 
 function getAddrList() {
 
-  let board1234 = document.getElementById("board1234");
+  $('[id^=board1234]').hide();
   $('[id^=board1234]').html("");
+  $('#board1234').show();
+  $('#board1234H').show();
 
+  let board1234 = document.getElementById("board1234");
   let srchDvcd = getRadioButtonValue('srchDvcd');
   let sgguBldgNm = document.getElementById("sgguBldgNm");
   let sgguBldgNmStr = sgguBldgNm.value.trim();
@@ -502,7 +527,9 @@ async function getSiseMap(stnmUnonCd) {
   mapArr = [];
   mapArrProcessedCnt = -1;
 	
+  $('[id^=board12345]').hide();
   $('[id^=board12345]').html("");
+  $('[id^=board12345]').show();
   
   fetch("http://bada.ai/siseapi/sise/map"
 		+ "?stnmUnonCd=" + stnmUnonCd
@@ -808,15 +835,19 @@ function getRadioButtonValue(varName) {
   </div>
 </div>
 
+<!-- citySet -->
 <div id="board1" class="flex-container">
 </div>
 
+<!-- sgguSet -->
 <div id="board12" class="flex-container">
 </div>
 
+<!-- emdSet -->
 <div id="board123" class="flex-container">
 </div>
 
+<!-- siseDvcd1 srch -->
 <div id="board2" class="flex_input">
   <div class="preference">
     <label for="name" class="label_req">조회방법 (srchDvcd)</label>
@@ -837,6 +868,7 @@ function getRadioButtonValue(varName) {
   </div>
 </div>
 
+<!-- siseDvcd2 srch -->
 <div id="board2A" class="flex_input">
   <div>
     <div class="preference" id="srchPnlEhLtnoBno">
