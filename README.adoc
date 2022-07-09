@@ -21,8 +21,12 @@ Edit Apache configuration file:
     ProxyPassReverse /siseapi http://sise-rest-api-server:8081/
 </VirtualHost>
 ----
-====
 
+----
+sudo service apache2 restart
+----
+
+====
 
 * https://dirask.com/posts/Linux-apache2-FIX-AH01144-No-protocol-handler-was-valid-for-the-URL-scheme-http-p2GdKj[Linux apache2 FIX - AH01144: No protocol handler was valid for the URL / (scheme 'http').]
 
