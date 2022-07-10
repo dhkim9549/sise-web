@@ -151,6 +151,15 @@ body {
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/df-number-format/2.1.6/jquery.number.min.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2XXSKRJK7P"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2XXSKRJK7P');
+</script>
 <script>
 
 let dd;
@@ -417,6 +426,7 @@ function getEhPr() {
             e.addEventListener("click", function() {
               $(this).siblings().css("background-color", "white");
               e.style.backgroundColor = "#ffe812";
+              showRslt2(element.ofntPrc);
             });
         });
         
@@ -652,6 +662,7 @@ function showKbSise() {
     e.addEventListener("click", function() {
       $(this).siblings().css("background-color", "white");
       e.style.backgroundColor = "#ffe812";
+      showRslt2(element.trdAvgPrc * 10000);
     });
   }
   
@@ -714,6 +725,7 @@ function showKabSise() {
     e.addEventListener("click", function() {
       $(this).siblings().css("background-color", "white");
       e.style.backgroundColor = "#ffe812";
+      showRslt2(element.trdAvgPrc * 10000);
     });
   }
 }
@@ -789,6 +801,7 @@ function showOlprSise(olprArr) {
     e.addEventListener("click", function() {
       $(this).siblings().css("background-color", "white");
       e.style.backgroundColor = "#ffe812";
+      showRslt2(element.ofntPrc);
     });
   }
 }
@@ -796,6 +809,12 @@ function showOlprSise(olprArr) {
 function showRslt() {
   $('#board12345678H').show();
   $('#board12345678H').html("조회가 완료되었습니다.");
+}
+
+function showRslt2(prc) {
+  $('#board12345678H').show();
+  $('#board12345678H').html("주택 가격: " + $.number(prc) + " 원");
+  board12345678H.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
 function getRadioButtonValue(varName) {
