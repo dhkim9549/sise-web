@@ -409,8 +409,21 @@ function getEhPr() {
 						
             let e0 = document.createElement('div');
             e0.className = "cont";
-            e0.innerHTML = element.cityNm + " " + element.sgguNm + " " + element.eubMyunNm + " " + element.stnmAddr;
+            e0.innerHTML = "(도로명) " + element.cityNm + " " + element.sgguNm + " " + element.eubMyunNm + " " + element.stnmAddr;
             e.append(e0);
+
+            let e00 = document.createElement('div');
+            e00.className = "cont";
+            e00.innerHTML
+              = "(지번) " + element.cityNm + " " + element.sgguNm + " " + element.eubMyunNm + " " + element.dongRiNm;
+            if((element.slndCd) == '2') {
+              e00.innerHTML += " " + "산";
+            }
+            e00.innerHTML += " " + Number(element.ltnoBno);
+            if(Number(element.ltnoBuno) > 0) {
+              e00.innerHTML += "-" + Number(element.ltnoBuno);
+            }
+            e.append(e00);
 						
             let e1 = document.createElement('div');
             e1.className = "cont";
