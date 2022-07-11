@@ -53,7 +53,6 @@ body {
   border-radius: 8px;
   box-shadow: 2px 2px 20px 0 rgba(0,0,0,0.04);
 }
-
 .flex_input > div {
   margin: 0 3em 1em;
 }
@@ -426,7 +425,7 @@ function getEhPr() {
             e.addEventListener("click", function() {
               $(this).siblings().css("background-color", "white");
               e.style.backgroundColor = "#ffe812";
-              showRslt2(element.ofntPrc);
+              showRslt3(element.ofntPrc, 60);
             });
         });
         
@@ -628,7 +627,7 @@ function showKbSise() {
   let board12345 = document.getElementById("board12345");
   
   kbArr.sort(function (a, b) {
-    return (a.pyngArea.padStart(10, '0') + a.ptyTypeNm).localeCompare(b.pyngArea.padStart(10, '0') + b.ptyTypeNm);
+    return Number(a.excvArea) - Number(b.excvArea);
   });
 
   for(let i = 0; i < kbArr.length; i++) {
@@ -639,25 +638,25 @@ function showKbSise() {
     e.className = "warning";
     board12345.append(e);
 		
-    let e0 = document.createElement('div');
-    e0.className = "cont";
-    e0.innerHTML = "(평형) " + element.pyngArea + element.ptyTypeNm;
-    e.append(e0);
-
     let e01 = document.createElement('div');
     e01.className = "cont";
     e01.innerHTML = "(전용면적) " + element.excvArea + " m²";
     e.append(e01);
 
-    let e02 = document.createElement('div');
-    e02.className = "cont";
-    e02.innerHTML = "(공급면적) " + element.splyArea + " m²";
-    e.append(e02);
+    let e0 = document.createElement('div');
+    e0.className = "cont";
+    e0.innerHTML = "(매매상한가) " + formatPrc(element.trdTopPrc);
+    e.append(e0);
 
     let e1 = document.createElement('div');
     e1.className = "cont";
-    e1.innerHTML = "(평균매매가격) " + formatPrc(element.trdAvgPrc);
+    e1.innerHTML = "(매매평균가) " + formatPrc(element.trdAvgPrc);
     e.append(e1);
+
+    let e2 = document.createElement('div');
+    e2.className = "cont";
+    e2.innerHTML = "(매매하한가) " + formatPrc(element.trdBttmPrc);
+    e.append(e2);
 
     e.addEventListener("click", function() {
       $(this).siblings().css("background-color", "white");
@@ -696,7 +695,7 @@ function showKabSise() {
   let board123456 = document.getElementById("board123456");
 
   kabArr.sort(function (a, b) {
-    return (a.pyngArea.padStart(10, '0') + a.ptyTypeNm).localeCompare(b.pyngArea.padStart(10, '0') + b.ptyTypeNm);
+    return Number(a.excvArea) - Number(b.excvArea);
   });
 
   for(let i = 0; i < kabArr.length; i++) {
@@ -707,20 +706,25 @@ function showKabSise() {
     e.className = "warning";
     board123456.append(e);
 		
-    let e0 = document.createElement('div');
-    e0.className = "cont";
-    e0.innerHTML = "(평형) " + element.pyngArea + element.ptyTypeNm;
-    e.append(e0);
-
     let e01 = document.createElement('div');
     e01.className = "cont";
     e01.innerHTML = "(전용면적) " + element.excvArea + " m²";
     e.append(e01);
 
+    let e1a = document.createElement('div');
+    e1a.className = "cont";
+    e1a.innerHTML = "(매매상한가) " + formatPrc(element.trdTopPrc);
+    e.append(e1a);
+
     let e1 = document.createElement('div');
     e1.className = "cont";
-    e1.innerHTML = "(평균매매가격) " + formatPrc(element.trdAvgPrc);
+    e1.innerHTML = "(매매평균가) " + formatPrc(element.trdAvgPrc);
     e.append(e1);
+
+    let e1b = document.createElement('div');
+    e1b.className = "cont";
+    e1b.innerHTML = "(매매하한가) " + formatPrc(element.trdBttmPrc);
+    e.append(e1b);
 
     e.addEventListener("click", function() {
       $(this).siblings().css("background-color", "white");
@@ -790,7 +794,7 @@ function showOlprSise(olprArr) {
     
     let e11 = document.createElement('div');
     e11.className = "cont";
-    e11.innerHTML = "(적용면적) " + element.apyArea + " m²";;
+    e11.innerHTML = "(전용면적) " + element.apyArea + " m²";;
     e.append(e11);
 
     let e2 = document.createElement('div');
@@ -801,20 +805,48 @@ function showOlprSise(olprArr) {
     e.addEventListener("click", function() {
       $(this).siblings().css("background-color", "white");
       e.style.backgroundColor = "#ffe812";
-      showRslt2(element.ofntPrc);
+      showRslt3(element.ofntPrc, 70);
     });
   }
 }
 
 function showRslt() {
   $('#board12345678H').show();
-  $('#board12345678H').html("조회가 완료되었습니다.");
+  $('#board12345678H').html("조회가 완료되었습니다. 주택(형)을 선택하세요.");
 }
 
 function showRslt2(prc) {
-  $('#board12345678H').show();
-  $('#board12345678H').html("주택 가격: " + $.number(prc) + " 원");
-  board12345678H.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+  $('#board123456789').show();
+  $('#board123456789').empty();
+
+  let e0 = document.createElement('div');
+  e0.className = "cont";
+  e0.innerHTML = "예상 담보평가액: " + $.number(prc) + " 원";
+  board123456789.append(e0);
+  
+  board123456789.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+}
+
+function showRslt3(prc, realRat) {
+  $('#board123456789').show();
+  $('#board123456789').empty();
+
+  let e0 = document.createElement('div');
+  e0.className = "cont";
+  e0.innerHTML = "공시가격: " + $.number(prc) + " 원";
+  board123456789.append(e0);
+
+  let e1 = document.createElement('div');
+  e1.className = "cont";
+  e1.innerHTML = "현실화율: " + realRat + " %";
+  board123456789.append(e1);
+
+  let e2 = document.createElement('div');
+  e2.className = "cont";
+  e2.innerHTML = "예상 담보평가액: " + $.number(prc / (realRat / 100)) + " 원";
+  board123456789.append(e2);
+  
+  board123456789.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
 function getRadioButtonValue(varName) {
@@ -932,6 +964,9 @@ function getRadioButtonValue(varName) {
 </div>
 
 <div id="board12345678H" class="flex-header">
+</div>
+
+<div class="flex_input" id="board123456789">
 </div>
 
 <div id="div1" class="flex-header">
