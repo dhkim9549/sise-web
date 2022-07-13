@@ -166,6 +166,7 @@ let zloanYm;
 let vv;
 
 document.addEventListener("DOMContentLoaded", function(event) {
+  $('#input_area2').hide();
   $('[id^=board1]').hide();
   $('[id^=board2]').hide();
   $('#button1').hide();
@@ -188,24 +189,62 @@ document.addEventListener("DOMContentLoaded", function(event) {
       getEhPr();
     }
   });
-  document.getElementById("board2").addEventListener('keydown', (e) => {
+  document.getElementById("board2A1").addEventListener('keydown', (e) => {
     if(e.key == "Enter") {
       document.getElementById("button1").click(); 
     }
   });
-  document.getElementById("board2A").addEventListener('keydown', (e) => {
+  document.getElementById("board2A2").addEventListener('keydown', (e) => {
+    if(e.key == "Enter") {
+      document.getElementById("button1").click(); 
+    }
+  });
+  document.getElementById("board2A3").addEventListener('keydown', (e) => {
     if(e.key == "Enter") {
       document.getElementById("button1").click(); 
     }
   });
   $('[id^=siseDvcd]').click(function() {
     checkSiseDvcd();
-    getCitySet();
+    getSearchDvcd();
   });
+  $('[id^=searchDvcd]').click(function() {
+    checkSearchDvcd();
+    if(searchDvcdVal == '1' || searchDvcdVal == '3') {
+      getCitySet();
+    } else if(searchDvcdVal == '2') {
+      showStnm();
+    }
+  });
+  
   $('[id^=srchDvcd]').click(function() {
     checkSrchDvcd();
   });
 });
+
+function getSearchDvcd() {
+  $('[id^=board1]').hide();
+  $('[id^=board1]').empty();
+  
+  $('[id^=board2]').hide();
+  $('#button1').hide();
+
+  $('#input_area2').show();
+  /*
+  if(siseDvcdVal == '1') {
+   $('#searchDvcd1').show();
+  } else {
+   $('#searchDvcd1').hide();
+  }*/
+  
+  var ele = document.getElementsByName("searchDvcd");
+  for(var i = 0; i < ele.length; i++) {
+    ele[i].checked = false;
+  }
+  checkSearchDvcd();
+  
+
+}
 
 let citySet;
 function fetchCitySet() {
@@ -259,12 +298,18 @@ function getCitySet() {
     e1.innerHTML = x;
     e.append(e1);
   });
+
+  board1.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
 let siseDvcdVal;
-
 function checkSiseDvcd() {
   siseDvcdVal = getRadioButtonValue('siseDvcd');
+}
+
+let searchDvcdVal;
+function checkSearchDvcd() {
+  searchDvcdVal = getRadioButtonValue('searchDvcd');
 }
 
 function checkSrchDvcd() {
@@ -314,6 +359,8 @@ function getSgguSet(city) {
       $("#board12").hide();
     }
   });
+
+  board12.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
 let emdSet;
@@ -340,9 +387,9 @@ function getEmdSet(sggu) {
       $(this).siblings().css("background-color", "white");
       e.style.backgroundColor = "#ffe812";
       lwdgCd = x.split('|')[1];
-      if(siseDvcdVal == '1') {
+      if(searchDvcdVal == '1') {
         showBldgNm();
-      } else if(siseDvcdVal == '2') {
+      } else if(searchDvcdVal == '3') {
         showLtno();
       }
     });
@@ -351,25 +398,38 @@ function getEmdSet(sggu) {
     e1.innerHTML = x.split('|')[0];
     e.append(e1);
   });
+
+  board123.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
 let lwdgCd;
 
 function showBldgNm() {
   $('[id^=board1234]').empty();
-	$('#board2').show();
+  $('[id^=board2A]').hide();
+	$('#board2A1').show();
   $('#button1').show();
   
-	$('#sgguBldgNm').focus();
+	$('#bldgNm').focus();
+}
+
+function showStnm() {
+  $('[id^=board1]').empty();
+  $('[id^=board2A]').hide();
+	$('#board2A2').show();
+  $('#button1').show();
+  
+  board2A2.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+	$("#stnm").focus();
 }
 
 function showLtno() {
   $('[id^=board1234]').empty();
-	$('#board2A').show();
-  $('[id^=srchPnlEh]').show();
+  $('[id^=board2A]').hide();
+	$('#board2A3').show();
   $('#button1').show();
   
-	$("#ehLtnoBno").focus();
+	$("#ltnoBno").focus();
 }
 
 function getEhPr() {
@@ -460,37 +520,70 @@ function getAddrList() {
   $('#board1234').show();
   $('#board1234H').show();
 
-  let board1234 = document.getElementById("board1234");
-  let srchDvcd = getRadioButtonValue('srchDvcd');
-  let sgguBldgNm = document.getElementById("sgguBldgNm");
-  let sgguBldgNmStr = sgguBldgNm.value.trim();
-  let ltnoBno = document.getElementById("ltnoBno");
-  let ltnoBnoStr = ltnoBno.value.trim();
-  let srchVal = "";
+  let board1234 = document.getElementById('board1234');
+  let searchDvcdVal = getRadioButtonValue('searchDvcd');
+  
+  let bldgNm = document.getElementById('bldgNm');
+  let bldgNmStr = bldgNm.value.trim();
 
-  if(srchDvcd == '1') {
-    if(sgguBldgNmStr == "") {
+  let stnm = document.getElementById('stnm');
+  let stnmStr = stnm.value.trim();
+  let bldgBno = document.getElementById('bldgBno');
+  let bldgBnoStr = bldgBno.value.trim();
+  let bldgBuno = document.getElementById('bldgBuno');
+  let bldgBunoStr = bldgBuno.value.trim();
+  
+  let ltnoBno = document.getElementById('ltnoBno');
+  let ltnoBnoStr = ltnoBno.value.trim();
+  let ltnoBuno = document.getElementById('ltnoBuno');
+  let ltnoBunoStr = ltnoBuno.value.trim();
+  
+  let addrUrl = "http://bada.ai/siseapi/sise";
+
+  if(searchDvcdVal == '1') {
+    if(bldgNmStr == "") {
       alert("건물명을 입력하세요.");
       return;
     }
-    srchVal = sgguBldgNmStr;
-  } else if(srchDvcd == '2') {
-    if(ltnoBnoStr == "") {
-      alert("지번을 입력하세요.");
+    addrUrl += "/addr1"
+  		+ "?lwdgCd=" + lwdgCd
+      + "&bldgNm=" + encodeURIComponent(bldgNmStr)
+      ;
+  } else if(searchDvcdVal == '2') {
+    if(stnmStr == "") {
+      alert("도로명을 입력하세요.");
       return;
     }
-    srchVal = ltnoBnoStr;
+    if(bldgBnoStr == "") {
+      alert("건물본번을 입력하세요.");
+      return;
+    }
+    addrUrl += "/addr2"
+  		+ "?stnm=" + stnmStr
+      + "&bldgBno=" + bldgBnoStr
+      + "&bldgBuno=" + bldgBunoStr
+      ;
+  } else if(searchDvcdVal == '3') {
+    if(ltnoBnoStr == "") {
+      alert("지번주소 본번을 입력하세요.");
+      return;
+    }
+    addrUrl += "/addr3"
+  		+ "?lwdgCd=" + lwdgCd
+      + "&ltnoBno=" + ltnoBnoStr
+      + "&ltnoBuno=" + ltnoBunoStr
+      ;
   }
 	
-  fetch("http://bada.ai/siseapi/sise/addr"
-		+ "?lwdgCd=" + lwdgCd
-		+ "&srchDvcd=" + srchDvcd
-		+ "&srchVal=" + encodeURIComponent(srchVal)
-	)
+  fetch(addrUrl)
     .then(r => r.json())
     .then(d => {
 
         let items = d;
+
+        items.sort(function (a, b) {
+          return a.sgguBldgNm.localeCompare(b.sgguBldgNm);
+        });
 				
         items.forEach(element => {
         
@@ -914,7 +1007,7 @@ function getRadioButtonValue(varName) {
     <div>주택 시세 조회</div>
 </div>
 
-<div class="flex_input" id="input_area2">
+<div class="flex_input" id="input_area0">
   <div id="app">
     주택 시세를 조회합니다.
   </div>
@@ -922,10 +1015,21 @@ function getRadioButtonValue(varName) {
 
 <div class="flex_input" id="input_area">
   <div class="preference">
-    <label for="name" class="label_req">공동주택여부를 선택하세요.</label>
+    <label for="name" class="label_req">주택유형을 선택하세요.</label>
     <div class="select">
-      <input type="radio" id="siseDvcd1" name="siseDvcd" value="1"><label for="siseDvcd1">예</label>
-      <input type="radio" id="siseDvcd2" name="siseDvcd" value="2"><label for="siseDvcd2">아니오</label>
+      <input type="radio" id="siseDvcd1" name="siseDvcd" value="1"><label for="siseDvcd1">공동주택</label>
+      <input type="radio" id="siseDvcd2" name="siseDvcd" value="2"><label for="siseDvcd2">단독주택</label>
+    </div>
+  </div>
+</div>
+
+<div class="flex_input" id="input_area2">
+  <div class="preference">
+    <label for="name" class="label_req">조회방법을 선택하세요.</label>
+    <div class="select">
+      <input type="radio" id="searchDvcd1" name="searchDvcd" value="1"><label for="searchDvcd1">건물명</label>
+      <input type="radio" id="searchDvcd2" name="searchDvcd" value="2"><label for="searchDvcd2">도로명</label>
+      <input type="radio" id="searchDvcd3" name="searchDvcd" value="3"><label for="searchDvcd3">지번</label>
     </div>
   </div>
 </div>
@@ -942,37 +1046,41 @@ function getRadioButtonValue(varName) {
 <div id="board123" class="flex-container">
 </div>
 
-<!-- siseDvcd1 srch -->
-<div id="board2" class="flex_input">
-  <div class="preference">
-    <label for="name" class="label_req">조회방법을 선택하세요.</label>
-    <div class="select">
-      <input type="radio" id="srchDvcd1" name="srchDvcd" value="1" checked><label for="srchDvcd1">건물명</label>
-      <input type="radio" id="srchDvcd2" name="srchDvcd" value="2"><label for="srchDvcd2">지번</label>
-    </div>
-  </div>
-  <div>
-    <div class="preference" id="srchPnlBldgNm">
+<div id="board2A1" class="flex_input">
+ <div>
+    <div class="preference">
       <label for="name" class="label_req">건물명</label>
-      <input type="text" id="sgguBldgNm" name="sgguBldgNm" maxlength="30" size="30" class="jfk_textinput">
-    </div>
-    <div class="preference" id="srchPnlLtnoBno">
-      <label for="name" class="label_req">지번주소 번지</label>
-      <input type="text" id="ltnoBno" name="ltnoBno" maxlength="10" size="10" class="jfk_textinput" placeholder="지번주소 본번만 입력">
+      <input type="text" id="bldgNm" name="bldgNm" maxlength="30" size="30" class="jfk_textinput">
     </div>
   </div>
 </div>
 
-<!-- siseDvcd2 srch -->
-<div id="board2A" class="flex_input">
+<div id="board2A2" class="flex_input">
   <div>
-    <div class="preference" id="srchPnlEhLtnoBno">
-      <label for="name" class="label_req">지번주소 본번</label>
-      <input type="text" id="ehLtnoBno" name="ehLtnoBno" maxlength="10" size="10" class="jfk_textinput" placeholder="지번주소 본번">
+    <div class="preference">
+      <label for="name" class="label_req">도로명</label>
+      <input type="text" id="stnm" name="stnm" maxlength="30" size="30" class="jfk_textinput">
     </div>
-    <div class="preference" id="srchPnlEhLtnoBuno">
+    <div class="preference">
+      <label for="name" class="label_req">건물번호 본번</label>
+      <input type="text" id="bldgBno" name="bldgBno" maxlength="10" size="10" class="jfk_textinput">
+    </div>
+    <div class="preference">
+      <label for="name" class="label_req">건물번호 부번</label>
+      <input type="text" id="bldgBuno" name="bldgBuno" maxlength="10" size="10" class="jfk_textinput">
+    </div>
+  </div>
+</div>
+
+<div id="board2A3" class="flex_input">
+  <div>
+    <div class="preference">
+      <label for="name" class="label_req">지번주소 본번</label>
+      <input type="text" id="ltnoBno" name="ltnoBno" maxlength="10" size="10" class="jfk_textinput">
+    </div>
+    <div class="preference">
       <label for="name" class="label_req">지번주소 부번</label>
-      <input type="text" id="ehLtnoBuno" name="ehLtnoBuno" maxlength="10" size="10" class="jfk_textinput" placeholder="지번주소 부번">
+      <input type="text" id="ltnoBuno" name="ltnoBuno" maxlength="10" size="10" class="jfk_textinput">
     </div>
   </div>
 </div>
