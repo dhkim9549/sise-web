@@ -438,7 +438,7 @@ function getEhPr() {
             e.addEventListener("click", function() {
               $(this).siblings().css("background-color", "white");
               e.style.backgroundColor = "#ffe812";
-              showRslt3(element.ofntPrc, 60);
+              showRslt3(element.ofntPrc, 180);
             });
         });
         
@@ -534,6 +534,34 @@ function getAddrList() {
 let mapArr = [];
 let mapArrProcessedCnt;
 
+function filterMapArr() {
+  let mapArrKBP = [];
+  let mapArrKAB = [];
+  let mapArrIDX = [];
+  
+  for(let i = 0; i < mapArr.length; i++) {
+    let element = mapArr[i];
+    if(element.siseDvcd == 'KBP') {
+      mapArrKBP.push(element);
+    } else if(element.siseDvcd == 'KAB') {
+      mapArrKAB.push(element);
+    } else if(element.siseDvcd == 'IDX') {
+      mapArrIDX.push(element);
+    }
+  }
+  
+  if(mapArrKBP.length > 0) {
+    mapArr = mapArrKBP;
+    return;
+  } else if(mapArrKAB.length > 0) {
+    mapArr = mapArrKAB;
+    return;
+  } else if(mapArrIDX.length > 0) {
+    mapArr = mapArrIDX;
+    return;
+  }
+}
+
 async function getSiseMap(stnmUnonCd) {
 
   mapArr = [];
@@ -549,11 +577,9 @@ async function getSiseMap(stnmUnonCd) {
 	)
     .then(r => r.json())
     .then(d => {
-
         let items = d;
-        
         mapArr = d;
-        
+        filterMapArr();
         getAptSise();
     });
   
@@ -573,13 +599,18 @@ async function getSiseMap(stnmUnonCd) {
   }
   
   showKbSise();
-  showKabSise();
+
+  if(kbArr.length == 0) {
+    showKabSise();
+  }
   
   if(kbArr.length == 0 && kabArr.length == 0 && mapArr.length > 0) {
     $('[id^=board1234567]').show();
     $('#board1234567H').html("공동주택 공시가격을 조회합니다.");
     getOlprSise();
   }
+
+  board12345H.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
 let kbArr = [];
@@ -632,10 +663,10 @@ function getAptSise() {
 
 function showKbSise() {
   if(kbArr.length > 0) {
-    $('#board12345H').html("KB 시세");
+    $('#board12345H').html("국민은행 시세");
     showRslt();
   } else {
-    $('#board12345H').html("KB 시세가 없습니다.");
+    $('#board12345H').html("국민은행 시세가 없습니다.");
   }
   let board12345 = document.getElementById("board12345");
   
@@ -677,8 +708,6 @@ function showKbSise() {
       showRslt2(element.trdAvgPrc * 10000);
     });
   }
-  
-  board12345H.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
 function formatPrc(prcAmt) {
@@ -699,10 +728,10 @@ function formatPrc(prcAmt) {
 
 function showKabSise() {
   if(kabArr.length > 0) {
-    $('#board123456H').html("KAB 시세");
+    $('#board123456H').html("한국부동산원 시세");
     showRslt();
   } else {
-    $('#board123456H').html("KAB 시세가 없습니다.");
+    $('#board123456H').html("한국부동산원 시세가 없습니다.");
   }
 
   let board123456 = document.getElementById("board123456");
@@ -818,7 +847,7 @@ function showOlprSise(olprArr) {
     e.addEventListener("click", function() {
       $(this).siblings().css("background-color", "white");
       e.style.backgroundColor = "#ffe812";
-      showRslt3(element.ofntPrc, 70);
+      showRslt3(element.ofntPrc, 140);
     });
   }
 }
@@ -831,6 +860,8 @@ function showRslt() {
 function showRslt2(prc) {
   $('#board123456789').show();
   $('#board123456789').empty();
+
+  $('#board12345678H').html("조회가 완료되었습니다.");
 
   let e0 = document.createElement('div');
   e0.className = "cont";
@@ -856,7 +887,7 @@ function showRslt3(prc, realRat) {
 
   let e2 = document.createElement('div');
   e2.className = "cont";
-  e2.innerHTML = "예상 담보평가액: " + $.number(prc / (realRat / 100)) + " 원";
+  e2.innerHTML = "예상 담보평가액: " + $.number(prc * (realRat / 100)) + " 원";
   board123456789.append(e2);
   
   board123456789.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
