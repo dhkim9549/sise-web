@@ -147,6 +147,11 @@ body {
     color: #fff;
 }
 
+.textarea {
+    font-family: notosanskr,Malgun Gothic,맑은 고딕,Dotum,돋움,sans-serif;
+    font-size:13px;
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/df-number-format/2.1.6/jquery.number.min.js"></script>
@@ -167,7 +172,12 @@ let vv;
 
 function numberOnly(element) {
   element.addEventListener("input", function(event) {
-    element.value = element.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    element.value = element.value.replace(/[^0-9]/g, '');
+  });
+}
+function noSpace(element) {
+  element.addEventListener("input", function(event) {
+    element.value = element.value.replace(/[\s]/g, '');
   });
 }
 
@@ -183,16 +193,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
   
   window.scrollTo({ top: 0, behavior: 'smooth' });
   
-  /*
-  const bldgBno = document.getElementById("bldgBno");
-  bldgBno.addEventListener("input", function(event) {
-    bldgBno.value = ltnoBno.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-  });
-  */
   numberOnly(document.getElementById("bldgBno"));
   numberOnly(document.getElementById("bldgBuno"));
   numberOnly(document.getElementById("ltnoBno"));
   numberOnly(document.getElementById("ltnoBuno"));
+  noSpace(document.getElementById("stnm"));
   
   document.getElementById("button1").addEventListener("click", function() {
     if(siseDvcdVal == '1') {
@@ -222,6 +227,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
   });
   $('[id^=searchDvcd]').click(function() {
     checkSearchDvcd();
+    
+    bldgNm.value = "";
+    stnm.value = "";
+    bldgBno.value = "";
+    bldgBuno.value = "";
+    ltnoBno.value = "";
+    ltnoBuno.value = "";
+    
     if(searchDvcdVal == '1' || searchDvcdVal == '3') {
       getCitySet();
     } else if(searchDvcdVal == '2') {
@@ -421,7 +434,7 @@ function showBldgNm() {
   $('[id^=board2A]').hide();
 	$('#board2A1').show();
   $('#button1').show();
-  
+  board2A1.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 	$('#bldgNm').focus();
 }
 
@@ -430,7 +443,6 @@ function showStnm() {
   $('[id^=board2A]').hide();
 	$('#board2A2').show();
   $('#button1').show();
-  
   board2A2.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 	$("#stnm").focus();
 }
@@ -440,7 +452,7 @@ function showLtno() {
   $('[id^=board2A]').hide();
 	$('#board2A3').show();
   $('#button1').show();
-  
+  board2A3.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 	$("#ltnoBno").focus();
 }
 
@@ -1107,6 +1119,13 @@ function getRadioButtonValue(varName) {
     <div class="preference">
       <label for="name" class="label_req">건물번호 부번</label>
       <input type="text" id="bldgBuno" name="bldgBuno" maxlength="10" size="10" class="jfk_textinput">
+    </div>
+    <div>
+      <div class="textarea">
+      <font color="blue">부산광역시 남구 문현금융로 40</font> 입력 방법 예시<br>
+      도로명: <font color="blue">문현금융로</font><br>
+      건물번호 본번: <font color="blue">40</font>
+      </div>
     </div>
   </div>
 </div>
