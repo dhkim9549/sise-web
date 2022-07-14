@@ -849,7 +849,7 @@ function showKbSise() {
     e.addEventListener("click", function() {
       $(this).siblings().css("background-color", "white");
       e.style.backgroundColor = "#ffe812";
-      showRslt2(element.trdAvgPrc * 10000);
+      showRslt2(element.trdAvgPrc * 10000, element.trdBttmPrc * 10000);
     });
   }
 }
@@ -915,7 +915,7 @@ function showKabSise() {
     e.addEventListener("click", function() {
       $(this).siblings().css("background-color", "white");
       e.style.backgroundColor = "#ffe812";
-      showRslt2(element.trdAvgPrc * 10000);
+      showRslt2(element.trdAvgPrc * 10000, element.trdBttmPrc * 10000);
     });
   }
 }
@@ -1001,7 +1001,7 @@ function showRslt() {
   $('#board12345678H').html("조회가 완료되었습니다. 주택(형)을 선택하세요.");
 }
 
-function showRslt2(prc) {
+function showRslt2(prc, prc2) {
   $('#board123456789').show();
   $('#board123456789').empty();
 
@@ -1009,7 +1009,9 @@ function showRslt2(prc) {
 
   let e0 = document.createElement('div');
   e0.className = "cont";
-  e0.innerHTML = "예상 담보평가액: " + $.number(prc) + " 원";
+  e0.innerHTML = "예상 담보평가액";
+  e0.innerHTML += "<br> " + $.number(prc) + " 원 (최저층 제외)";
+  e0.innerHTML += "<br> " + $.number(prc2) + " 원 (최저층)";
   board123456789.append(e0);
   
   board123456789.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
