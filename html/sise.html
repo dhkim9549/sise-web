@@ -181,11 +181,18 @@ function noSpace(element) {
   });
 }
 
+const returnValue = {
+  rsltPrc: 0
+};
+
 document.addEventListener("DOMContentLoaded", function(event) {
   $('#input_area2').hide();
   $('[id^=board1]').hide();
   $('[id^=board2]').hide();
   $('#button1').hide();
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
+  
   fetchCitySet();
   fetchSgguMap();
   fetchEmdMap();
@@ -205,6 +212,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     } else if(siseDvcdVal == '2') {
       getEhPr();
     }
+  });
+  $('#button2').click(function() {
+    window.opener.getReturnValue(JSON.stringify(returnValue));
+    window.close();
   });
   document.getElementById("board2A1").addEventListener('keydown', (e) => {
     if(e.key == "Enter") {
@@ -253,6 +264,8 @@ function getSearchDvcd() {
   
   $('[id^=board2]').hide();
   $('#button1').hide();
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
 
   $('#input_area2').show();
   
@@ -306,6 +319,8 @@ function getCitySet() {
   
   $('[id^=board2]').hide();
   $('#button1').hide();
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
   
   citySet.forEach((x, i) => {
   
@@ -359,6 +374,8 @@ function getSgguSet(city) {
 
   $('[id^=board2]').hide();
   $('#button1').hide();
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
   
   citySel = city;
   sgguSet = sgguMap[city];
@@ -398,6 +415,8 @@ function getEmdSet(sggu) {
   
   $('[id^=board2]').hide();
   $('#button1').hide();
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
 
   sgguSel = sggu;
   emdSet = emdMap[citySel + '|' + sggu];
@@ -458,6 +477,8 @@ function showLtno() {
 
 function getEhPr() {
 
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
   $('[id^=board1234]').hide();
   $('[id^=board1234]').html("");
   $('#board1234').show();
@@ -566,6 +587,8 @@ function getEhPr() {
 
 function getAddrList() {
 
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
   $('[id^=board1234]').hide();
   $('[id^=board1234]').html("");
   $('#board1234').show();
@@ -710,11 +733,13 @@ async function getSiseMap(stnmUnonCd) {
 
   mapArr = [];
   mapArrProcessedCnt = -1;
-	
+
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
   $('[id^=board12345]').hide();
   $('[id^=board12345]').html("");
   $('[id^=board12345]').show();
-  $('[id^=board1234567]').hide();
+  $('[id^=board123456]').hide();
   
   fetch("http://bada.ai/siseapi/sise/map"
 		+ "?stnmUnonCd=" + stnmUnonCd
@@ -871,6 +896,11 @@ function formatPrc(prcAmt) {
 }
 
 function showKabSise() {
+
+  $('#board123456H').show();
+  $('#board123456').empty();
+  $('#board123456').show();
+  
   if(kabArr.length > 0) {
     $('#board123456H').html("한국부동산원 시세");
     showRslt();
@@ -947,6 +977,9 @@ function getOlprSise() {
 }
 
 function showOlprSise(olprArr) {
+
+  $('[id^=board123456789]').hide();
+  
   if(olprArr.length > 0) {
     $('#board1234567H').html("공동주택 공시가격");
     showRslt();
@@ -1002,41 +1035,72 @@ function showRslt() {
 }
 
 function showRslt2(prc, prc2) {
+
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
+  $('#board123456789H').show();
   $('#board123456789').show();
   $('#board123456789').empty();
 
   $('#board12345678H').html("조회가 완료되었습니다.");
+  $('#board123456789H').html("최저층 여부를 선택하세요.");
 
-  let e0 = document.createElement('div');
-  e0.className = "cont";
-  e0.innerHTML = "예상 담보평가액";
-  e0.innerHTML += "<br> " + $.number(prc) + " 원 (최저층 제외)";
-  e0.innerHTML += "<br> " + $.number(prc2) + " 원 (최저층)";
-  board123456789.append(e0);
+  for(let i = 0; i < 2; i++) {
+    let e = document.createElement('div');
+    e.className = "warning";
+    board123456789.append(e);
+              
+    let e0 = document.createElement('div');
+    e0.className = "cont";
+    if(i == 0) {
+      e.setAttribute('hsPrc', prc);
+      e0.innerHTML = $.number(prc) + " 원 (최저층 제외)";
+    } else if(i == 1) {
+      e.setAttribute('hsPrc', prc2);
+      e0.innerHTML = $.number(prc2) + " 원 (최저층)";
+    }
+    e.append(e0);
+
+    e.addEventListener("click", function() {
+      $(this).siblings().css("background-color", "white");
+      e.style.backgroundColor = "#ffe812";
+      returnValue.rsltPrc = e.getAttribute('hsPrc'); // xixixixi
+      $('#button2').show();
+    });
+  }
   
   board123456789.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
 function showRslt3(prc, realRat) {
-  $('#board123456789').show();
-  $('#board123456789').empty();
+  $('#board123456789A').show();
+  $('#board123456789A').empty();
+  $('#board123456789H').hide();
+  $('#button2').show();
+  
+  $('#board12345678H').html("조회가 완료되었습니다.");
+
+  let rsltPrc = prc * (realRat / 100);
 
   let e0 = document.createElement('div');
   e0.className = "cont";
   e0.innerHTML = "공시가격: " + $.number(prc) + " 원";
-  board123456789.append(e0);
+  board123456789A.append(e0);
 
   let e1 = document.createElement('div');
   e1.className = "cont";
   e1.innerHTML = "현실화율: " + realRat + " %";
-  board123456789.append(e1);
-
+  board123456789A.append(e1);
+  
   let e2 = document.createElement('div');
   e2.className = "cont";
-  e2.innerHTML = "예상 담보평가액: " + $.number(prc * (realRat / 100)) + " 원";
-  board123456789.append(e2);
+  e2.innerHTML = "예상 담보평가액: " + $.number(rsltPrc) + " 원";
+  board123456789A.append(e2);
+
+  board123456789A.style.backgroundColor = "#ffe812";
+  returnValue.rsltPrc = rsltPrc;
   
-  board123456789.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+  board123456789A.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
 function getRadioButtonValue(varName) {
@@ -1178,7 +1242,21 @@ function getRadioButtonValue(varName) {
 <div id="board12345678H" class="flex-header">
 </div>
 
-<div class="flex_input" id="board123456789">
+<div id="board123456789H" class="flex-header">
+</div>
+
+<div id="board123456789" class="flex-container">
+</div>
+
+<div class="flex_input" id="board123456789A">
+</div>
+
+<div class="flex_input_2">
+  <div class="btn_login_wrap">
+    <button class="btn_login" id="button2">
+      <span class="btn_text">예상 담보평가액 선택</span>
+    </button>
+  </div>
 </div>
 
 <div id="div1" class="flex-header">
