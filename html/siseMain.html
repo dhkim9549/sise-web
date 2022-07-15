@@ -157,11 +157,16 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/df-number-format/2.1.6/jquery.number.min.js"></script>
 <script>
 
+var windowObjectReference = null;
+
 function openNewWindow(url) {
   var name = '_blank';
   var specs = 'menubar=no,status=no,toolbar=no';
-  var newWindow = window.open(url, name, specs);
-  newWindow.focus();
+  if(windowObjectReference == null || windowObjectReference.closed) {
+    windowObjectReference = window.open(url, name, specs);
+  } else {
+    windowObjectReference.focus();
+  }
 }
 
 let gReturnValue = {
@@ -208,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 <div class="flex_input_2">
   <div class="btn_login_wrap">
     <button class="btn_login" id="openNewWindowButton">
-      <span class="btn_text">예상 담보평가액 조회</span>
+      <span class="btn_text">시세 조회</span>
     </button>
   </div>
 </div>
