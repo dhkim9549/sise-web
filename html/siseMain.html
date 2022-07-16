@@ -57,16 +57,17 @@ body {
   margin: 0 3em 1em;
 }
 
-.flex_input_2 {
+.flex_input_3 {
   display: flex;
-  justify-content: space-between;
-  margin: 0 0.5em;
   padding: 2em;
+  justify-content: start;
+  background-color: white;
+  margin: 0 0.5em 0.5em;
+  border-radius: 8px;
+  box-shadow: 2px 2px 20px 0 rgba(0,0,0,0.04);
 }
-@media only screen and (min-width: 992px) {
-  .flex_input_2 {
-    padding-left: 3em;
-  }
+.flex_input_3 > div {
+  margin: 0em 1em;
 }
 
 .preference {
@@ -152,6 +153,20 @@ body {
     font-size:13px;
 }
 
+.field {
+  display:flex;
+  flex-direction:row;
+}
+.field>input[type=text],
+.field>button {
+  display:block;
+}
+.field>input[type=text] {
+  flex:10;
+}
+.field>button {
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/df-number-format/2.1.6/jquery.number.min.js"></script>
@@ -201,20 +216,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
   </div>
 </div>
 
-<div id="board2A3" class="flex_input">
-  <div>
-    <div class="preference">
-      <label for="name" class="label_req">예상 담보평가액</label>
-      <input type="text" id="hsPrc" name="hsPrc" maxlength="10" size="10" class="jfk_textinput" style="text-align: end;">
-    </div>
-  </div>
-</div>
-
-<div class="flex_input_2">
-  <div class="btn_login_wrap">
+<div id="board2A3" class="flex_input_3">
     <button class="btn_login" id="openNewWindowButton">
       <span class="btn_text">시세 조회</span>
     </button>
+    <div class="preference">
+      <label for="name" class="label_req">예상 담보평가액</label>
+      <input type="text" id="hsPrc" name="hsPrc" maxlength="20" size="20" class="jfk_textinput" style="text-align: end;">
+    </div>
+</div>
+
+<div id="board2A4" class="flex_input">
+  <div class="field" id="searchform">
+    <button type="button" id="search">Save</button>
+    <input type="text" id="searchterm" placeholder="Section Name" />
   </div>
 </div>
 
