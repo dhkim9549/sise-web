@@ -21,8 +21,8 @@ body {
   font-size:20px;font-weight:700;line-height:24px;color:#fbfbfd;letter-spacing:-.5px
 }
 
-.jfk_textinput{border-radius:1px;border:1px solid #d9d9d9;border-top:1px solid #c0c0c0;font-size:13px;height:25px;padding:1px 8px}
-.jfk_textinput:focus{box-shadow:inset 0 1px 2px rgba(0,0,0,.3);border:1px solid #4d90fe;outline:none}
+.textinput_addr{border-radius:1px;border:1px solid #d9d9d9;border-top:1px solid #c0c0c0;font-size:13px;height:25px;padding:1px 8px}
+.textinput_addr:focus{box-shadow:inset 0 1px 2px rgba(0,0,0,.3);border:1px solid #4d90fe;outline:none}
 .label_req{font-size:13px;line-height:25px;}
 
 .flex-header {
@@ -176,7 +176,7 @@ var windowObjectReference = null;
 
 function openNewWindow(url) {
   var name = '_blank';
-  var specs = 'menubar=no,status=no,toolbar=no';
+  var specs = 'menubar=no,status=no,toolbar=no,top=50,left=100,width=850,height=500';
   if(windowObjectReference == null || windowObjectReference.closed) {
     windowObjectReference = window.open(url, name, specs);
   } else {
@@ -217,13 +217,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 </div>
 
 <div id="board2A3" class="flex_input_3">
-    <button class="btn_login" id="openNewWindowButton">
-      <span class="btn_text">시세 조회</span>
-    </button>
-    <div class="preference">
-      <label for="name" class="label_req">예상 담보평가액</label>
-      <input type="text" id="hsPrc" name="hsPrc" maxlength="20" size="20" class="jfk_textinput" style="text-align: end;">
-    </div>
+  <button class="btn_login" id="openNewWindowButton">
+    <span class="btn_text">시세 조회</span>
+  </button>
+  <div class="preference">
+    <label for="name" class="label_req">예상 담보평가액</label>
+    <input type="text" id="hsPrc" name="hsPrc" maxlength="20" size="20" class="textinput_addr" style="text-align: end;">
+  </div>
 </div>
 
 <div id="board2A4" class="flex_input">
