@@ -23,7 +23,7 @@ body {
 }
 .btn_login {
   display:block;width:100%;padding:14px 0 14px;
-  border:solid 1px rgba(0,0,0,.15);background-color:#036635;box-sizing:border-box;padding:14px 0;border-radius:5.4px
+  border:solid 1px rgba(0,0,0,.15);background-color:#B40F1F;box-sizing:border-box;padding:14px 0;border-radius:5.4px
 }
 @media only screen and (min-width: 768px) {
   .btn_login {
@@ -33,7 +33,7 @@ body {
 
 .btn_login_2 {
   display:block;width:100%;padding:14px 0 14px;
-  border:solid 1px rgba(0,0,0,.15);background-color:#036635;box-sizing:border-box;padding:14px 0;border-radius:5.4px
+  border:solid 1px rgba(0,0,0,.15);background-color:#B40F1F;box-sizing:border-box;padding:14px 0;border-radius:5.4px
 }
 @media only screen and (min-width: 768px) {
   .btn_login_2 {
@@ -105,7 +105,7 @@ body {
 }
 @media only screen and (min-width: 768px) {
   .preference {
-    width: 20em;
+    width: 90%;
   }
 }
 
@@ -171,8 +171,8 @@ body {
     color: #333;
 }
 .select input[type=radio]:checked+label{
-    border: 1px solid #036635;
-    background-color: #036635;
+    border: 1px solid #B40F1F;
+    background-color: #B40F1F;
     color: #fff;
 }
 
@@ -561,7 +561,6 @@ function getEhPr() {
         items.forEach(element => {
         
             let e = document.createElement('div');
-            e.className = "warning";
             board1234.append(e);
 						
             let e0 = document.createElement('div');
@@ -687,7 +686,6 @@ function getAddrList() {
         items.forEach(element => {
         
             let e = document.createElement('div');
-            e.className = "warning";
             board1234.append(e);
 						
             let e0 = document.createElement('div');
@@ -873,7 +871,6 @@ function showKbSise() {
     let element = kbArr[i];
 
     let e = document.createElement('div');
-    e.className = "warning";
     board12345.append(e);
 		
     let e01 = document.createElement('div');
@@ -944,7 +941,6 @@ function showKabSise() {
     let element = kabArr[i];
 
     let e = document.createElement('div');
-    e.className = "warning";
     board123456.append(e);
 		
     let e01 = document.createElement('div');
@@ -1023,7 +1019,6 @@ function showOlprSise(olprArr) {
     let element = olprArr[i];
 
     let e = document.createElement('div');
-    e.className = "warning";
     board1234567.append(e);
 		
     let e0 = document.createElement('div');
@@ -1072,19 +1067,30 @@ function showRslt2(prc, prc2) {
 
   for(let i = 0; i < 2; i++) {
     let e = document.createElement('div');
-    e.className = "warning";
+    e.style.padding = "1em 48px";
     board123456789.append(e);
-              
-    let e0 = document.createElement('div');
-    e0.className = "cont";
+    
     if(i == 0) {
       e.setAttribute('hsPrc', prc);
-      e0.innerHTML = $.number(prc) + " 원 (최저층 제외)";
+      let e0 = document.createElement('div');
+      e0.className = "cont";
+      e0.innerHTML = "최저층 제외";
+      e.append(e0);
+      let e1 = document.createElement('div');
+      e1.className = "cont";
+      e1.innerHTML = "예상 담보평가액: " + $.number(prc) + " 원";
+      e.append(e1);
     } else if(i == 1) {
       e.setAttribute('hsPrc', prc2);
-      e0.innerHTML = $.number(prc2) + " 원 (최저층)";
+      let e0 = document.createElement('div');
+      e0.className = "cont";
+      e0.innerHTML = "최저층";
+      e.append(e0);
+      let e1 = document.createElement('div');
+      e1.className = "cont";
+      e1.innerHTML = "예상 담보평가액: " + $.number(prc2) + " 원";
+      e.append(e1);
     }
-    e.append(e0);
 
     e.addEventListener("click", function() {
       $(this).siblings().css("background-color", "white");
