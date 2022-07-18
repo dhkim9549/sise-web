@@ -176,7 +176,7 @@ var windowObjectReference = null;
 
 function openNewWindow(url) {
   var name = '_blank';
-  var specs = 'menubar=no,status=no,toolbar=no,top=50,left=100,width=850,height=500';
+  var specs = 'menubar=no,status=no,toolbar=no,top=50,left=100,width=850,height=850';
   if(windowObjectReference == null || windowObjectReference.closed) {
     windowObjectReference = window.open(url, name, specs);
   } else {
