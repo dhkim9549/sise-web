@@ -70,7 +70,7 @@ body {
   flex-direction: column;
   justify-content: start;
   background-color: white;
-  margin: 0 0.5em 0.5em;
+  margin: 0.5em;
   padding: 1em 0;
   border-radius: 8px;
   box-shadow: 2px 2px 20px 0 rgba(0,0,0,0.04);
@@ -105,7 +105,7 @@ body {
 }
 @media only screen and (min-width: 768px) {
   .preference {
-    width: 90%;
+    width: 30em;
   }
 }
 
@@ -478,6 +478,7 @@ function getEmdSet(sggu) {
 let lwdgCd;
 
 function showBldgNm() {
+  $('[id^=board1234]').hide();
   $('[id^=board1234]').empty();
   $('[id^=board2A]').hide();
 	$('#board2A1').show();
@@ -493,6 +494,7 @@ function showStnm() {
 }
 
 function showLtno() {
+  $('[id^=board1234]').hide();
   $('[id^=board1234]').empty();
   $('[id^=board2A]').hide();
 	$('#board2A3').show();
@@ -971,9 +973,11 @@ function showKabSise() {
   }
 }
 
-function getOlprSise() {
+let olprDEArr = [];
 
-  let olprArr = [];
+async function getOlprSise() {
+
+  olprDEArr = [];
   
   for(let i = 0; i < mapArr.length; i++) {
     
@@ -981,25 +985,92 @@ function getOlprSise() {
   
     if(element.siseDvcd == 'IDX') {
 
-        fetch("http://bada.ai/siseapi/sise/olpr"
+        let olprDArr = [];
+
+        await fetch("http://bada.ai/siseapi/sise/olprD"
           + "?twprcDnjiNo=" + element.siseMapDstgKeyVal
         )
           .then(r => r.json())
           .then(d => {
 
             d.forEach(element => {
-              olprArr.push(element);
+              olprDArr.push(element);
             });
             
-            showOlprSise(olprArr);
+            showOlprDSise(element.siseMapDstgKeyVal, olprDArr);
           });
     }
+  }
+  
+  if(olprDEArr.length == 1) {
+    olprDEArr[0].click();
+  }
+}
+
+function showOlprDSise(siseMapDstgKeyVal, olprDArr) {
+
+  $('[id^=board123456789]').hide();
+  
+  if(olprDArr.length > 0) {
+    $('#board1234567H').html("공동주택 공시가격");
+    $('#board12345678H').show();
+    $('#board12345678H').html("동을 선택하세요.");
+  } else {
+    $('#board1234567H').html("공동주택 공시가격이 없습니다.");
+  }
+
+  let board1234567A = document.getElementById("board1234567A");
+
+  olprDArr.sort(function (a, b) {
+    return a.dtlBldgNm.padStart(10, '0').localeCompare(b.dtlBldgNm.padStart(10, '0'));
+  });
+
+  for(let i = 0; i < olprDArr.length; i++) {
+    
+    let element = olprDArr[i];
+
+    let e = document.createElement('div');
+    board1234567A.append(e);
+    olprDEArr.push(e);
+		
+    let e0 = document.createElement('div');
+    e0.className = "cont";
+    e0.innerHTML = "(건물명) " + element.bldgNm;
+    e.append(e0);
+
+    let e1 = document.createElement('div');
+    e1.className = "cont";
+    e1.innerHTML = "(동) " + element.dtlBldgNm;
+    e.append(e1);
+    
+    e.addEventListener("click", function() {
+      $(this).siblings().css("background-color", "white");
+      e.style.backgroundColor = "#ffe812";
+
+      let olprArr = [];
+
+      fetch("http://bada.ai/siseapi/sise/olpr2"
+        + "?twprcDnjiNo=" + siseMapDstgKeyVal
+        + "&twprcDongNo=" + element.twprcDongNo
+      )
+        .then(r => r.json())
+        .then(d => {
+
+          d.forEach(element => {
+            olprArr.push(element);
+          });
+          
+          showOlprSise(olprArr);
+        });
+
+    });
   }
 }
 
 function showOlprSise(olprArr) {
 
   $('[id^=board123456789]').hide();
+  $('#board1234567').empty();
   
   if(olprArr.length > 0) {
     $('#board1234567H').html("공동주택 공시가격");
@@ -1007,8 +1078,6 @@ function showOlprSise(olprArr) {
   } else {
     $('#board1234567H').html("공동주택 공시가격이 없습니다.");
   }
-
-  let board1234567 = document.getElementById("board1234567");
 
   olprArr.sort(function (a, b) {
     return (a.dtlBldgNm.padStart(10, '0') + a.bldgHo.padStart(10, '0')).localeCompare(b.dtlBldgNm.padStart(10, '0') + b.bldgHo.padStart(10, '0'));
@@ -1258,6 +1327,8 @@ function getRadioButtonValue(varName) {
 </div>
 
 <div id="board1234567H" class="flex-header">
+</div>
+<div id="board1234567A" class="flex-container">
 </div>
 <div id="board1234567" class="flex-container">
 </div>
