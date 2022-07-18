@@ -1010,6 +1010,7 @@ async function getOlprSise() {
 function showOlprDSise(siseMapDstgKeyVal, olprDArr) {
 
   $('[id^=board123456789]').hide();
+  $('#button2').hide();
   
   if(olprDArr.length > 0) {
     $('#board1234567H').html("공동주택 공시가격");
@@ -1070,6 +1071,7 @@ function showOlprDSise(siseMapDstgKeyVal, olprDArr) {
 function showOlprSise(olprArr) {
 
   $('[id^=board123456789]').hide();
+  $('#button2').hide();
   $('#board1234567').empty();
   
   if(olprArr.length > 0) {
