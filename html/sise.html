@@ -221,6 +221,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   $('#button1').hide();
   $('#button2').hide();
   returnValue.rsltPrc = 0;
+  $('#div1').append("<br>" + navigator.userAgent);
   
   fetchCitySet();
   fetchSgguMap();
@@ -526,7 +527,7 @@ function getEhPr() {
   let ltnoBuno = document.getElementById('ltnoBuno');
   let ltnoBunoStr = ltnoBuno.value.trim();
   
-  let addrUrl = "http://bada.ai/siseapi/sise";
+  let addrUrl = "/siseapi/sise";
 
   if(searchDvcdVal == '2') {
     if(stnmStr == "") {
@@ -638,7 +639,7 @@ function getAddrList() {
   let ltnoBuno = document.getElementById('ltnoBuno');
   let ltnoBunoStr = ltnoBuno.value.trim();
   
-  let addrUrl = "http://bada.ai/siseapi/sise";
+  let addrUrl = "/siseapi/sise";
 
   if(searchDvcdVal == '1') {
     if(bldgNmStr == "") {
@@ -766,7 +767,7 @@ async function getSiseMap(stnmUnonCd) {
   $('[id^=board12345]').show();
   $('[id^=board123456]').hide();
   
-  fetch("http://bada.ai/siseapi/sise/map"
+  fetch("/siseapi/sise/map"
 		+ "?stnmUnonCd=" + stnmUnonCd
 	)
     .then(r => r.json())
@@ -822,7 +823,7 @@ function getAptSise() {
   
     if(element.siseDvcd == 'KBP') {
 
-        fetch("http://bada.ai/siseapi/sise/kbSise"
+        fetch("/siseapi/sise/kbSise"
           + "?kbHsDstgNo=" + element.siseMapDstgKeyVal
         )
           .then(r => r.json())
@@ -837,7 +838,7 @@ function getAptSise() {
           
     } else if(element.siseDvcd == 'KAB') {
 
-        fetch("http://bada.ai/siseapi/sise/kabSise"
+        fetch("/siseapi/sise/kabSise"
           + "?kabDnjiNo=" + element.siseMapDstgKeyVal
         )
           .then(r => r.json())
@@ -987,7 +988,7 @@ async function getOlprSise() {
 
         let olprDArr = [];
 
-        await fetch("http://bada.ai/siseapi/sise/olprD"
+        await fetch("/siseapi/sise/olprD"
           + "?twprcDnjiNo=" + element.siseMapDstgKeyVal
         )
           .then(r => r.json())
@@ -1050,7 +1051,7 @@ function showOlprDSise(siseMapDstgKeyVal, olprDArr) {
 
       let olprArr = [];
 
-      fetch("http://bada.ai/siseapi/sise/olpr2"
+      fetch("/siseapi/sise/olpr2"
         + "?twprcDnjiNo=" + siseMapDstgKeyVal
         + "&twprcDongNo=" + element.twprcDongNo
       )
@@ -1226,12 +1227,6 @@ function getRadioButtonValue(varName) {
     <div>주택 시세 조회</div>
 </div>
 
-<div class="flex_input" id="input_area0">
-  <div id="app">
-    주택 시세를 조회합니다.
-  </div>
-</div>
-
 <div class="flex_input" id="input_area">
   <div class="preference">
     <label for="name" class="label_req">주택유형을 선택하세요.</label>
@@ -1356,8 +1351,8 @@ function getRadioButtonValue(varName) {
 </div>
 
 <div id="div1" class="flex-header">
-이 웹페이지는 프로토타입입니다.<br><br>
-<a href="https://github.com/dhkim9549">
+이 웹페이지는 프로토타입입니다.
+<br><br><a href="https://github.com/dhkim9549">
 github.com/dhkim9549
 </a>
 </div>
