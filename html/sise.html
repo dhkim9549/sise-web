@@ -482,8 +482,10 @@ function showBldgNm() {
   $('[id^=board1234]').hide();
   $('[id^=board1234]').empty();
   $('[id^=board2A]').hide();
-	$('#board2A1').show();
+  $('#board2A1').show();
   $('#button1').show();
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
   board2A1.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
@@ -492,6 +494,8 @@ function showStnm() {
   $('[id^=board2A]').hide();
 	$('#board2A2').show();
   $('#button1').show();
+  $('#button2').hide();
+  returnValue.rsltPrc = 0;
 }
 
 function showLtno() {
