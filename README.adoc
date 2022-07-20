@@ -30,4 +30,8 @@ sudo service apache2 restart
 
 * https://dirask.com/posts/Linux-apache2-FIX-AH01144-No-protocol-handler-was-valid-for-the-URL-scheme-http-p2GdKj[Linux apache2 FIX - AH01144: No protocol handler was valid for the URL / (scheme 'http').]
 
+----
+sudo a2enmod proxy_http
+----
+
 * https://github.com/dhkim9549/sise-rest-api[Building sise REST API service]
